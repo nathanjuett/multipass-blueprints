@@ -1,0 +1,78 @@
+# This blueprint creates a dotnet development environment.
+# Version reflects the lts version of dotnet used by this blueprint.
+# If you are a zsh user, the ohmyzsh dotnet plugin is already enabled when you switch to zsh.
+
+
+description: A development and testing environment for dotnet developers
+version: 6.0
+
+runs-on:
+- x86_64
+- arm64
+
+instances:
+  dotnet-dev:
+    image: 22.04
+    limits:
+      min-cpu: 2
+      min-mem: 4G
+      min-disk: 30G
+    timeout: 1200
+    cloud-init:
+      vendor-data: |
+        package_update: true
+
+        packages:
+        - zsh
+        - vim
+        - dotnet-sdk-6.0        
+
+        runcmd:
+        - DEBIAN_FRONTEND=noninteractive apt -y upgrade
+
+        - |
+          # disable swap
+          sysctl -w vm.swappiness=0
+          echo "vm.swappiness = 0" | tee -a /etc/sysctl.conf
+          swapoff -a
+
+        - |
+          # disable unnecessary services
+          systemctl disable man-db.timer man-db.service --now
+          systemctl disable apport.service apport-autoreport.service  --now
+          systemctl disable apt-daily.service apt-daily.timer --now
+          systemctl disable apt-daily-upgrade.service apt-daily-upgrade.timer --now
+          systemctl disable unattended-upgrades.service --now
+          systemctl disable motd-news.service motd-news.timer --now
+          systemctl disable bluetooth.target --now
+          systemctl disable ua-messaging.service ua-messaging.timer --now
+          systemctl disable ua-timer.timer ua-timer.service --now
+          systemctl disable systemd-tmpfiles-clean.timer --now
+
+        - |
+          # apt cleanup
+          apt remove -y landscape-client landscape-common
+          apt-get autoremove -y
+
+        - |
+          # oh-my-zsh + dotnet plugin
+          sudo -u ubuntu sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+          sudo -u ubuntu git clone https://github.com/zsh-users/zsh-autosuggestions.git ~ubuntu/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+          sudo -u ubuntu git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~ubuntu/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+          sudo -u ubuntu sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting colored-man-pages dotnet colorize)/g' ~ubuntu/.zshrc
+
+        final_message: "The system is finally up, after $UPTIME seconds"
+
+health-check: |
+  set -e
+  
+  dotnet --list-sdks   
+
+  mkdir hello-world
+  cd hello-world
+
+  dotnet new console
+  dotnet build
+  dotnet publish
+  bin/Debug/net6.0/publish/hello-world
+  
