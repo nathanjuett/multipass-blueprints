@@ -33,14 +33,14 @@ instances:
         - content: |
 
             #!/bin/bash
-            FILENAME="/home/ubuntu/Home/.ssh/id_rsa.pub"
-            PUBKEY=$(<$FILENAME)
+            FILENAME="/home/ubuntu/Home/.ssh/id_rsa.pub"            
             AUTHORIZED_KEYS_FILENAME="/home/ubuntu/.ssh/authorized_keys"
             READYMESSAGE="Ready to work with vscode use the Remote-SSH extension "$(hostname -I)"username ubuntu"
             if [ -d "/home/ubuntu/Home/.ssh" ] 
             then
               if [ -f "$FILENAME" ]
               then
+                PUBKEY=$(<$FILENAME)
                 if grep -qF "$PUBKEY" $AUTHORIZED_KEYS_FILENAME
                 then			
                   echo $READYMESSAGE
