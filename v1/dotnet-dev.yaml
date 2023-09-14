@@ -61,6 +61,7 @@ instances:
             fi
           path: /etc/update-motd.d/60-motd-visualstudio
           defer: true
+          permissions: '0755'
 
 
         runcmd:
