@@ -59,7 +59,7 @@ instances:
               echo "so vscode can be used to access this container with the Remote-SSH extension"
               echo "without having to login"
             fi
-          path: /etc/update-motd.d/60-motd-visualstudio
+          path: /etc/update-motd.d/05-motd-visualstudio
           defer: true
           permissions: '0755'
 
