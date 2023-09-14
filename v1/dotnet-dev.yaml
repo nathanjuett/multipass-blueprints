@@ -27,10 +27,6 @@ instances:
         - vim
         - dotnet-sdk-6.0       
 
-        ssh_keys:
-          ssh_publish_hostkeys:
-            enabled: true
-
         runcmd:
         - DEBIAN_FRONTEND=noninteractive apt -y upgrade
 
