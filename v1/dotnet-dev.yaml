@@ -35,7 +35,8 @@ instances:
             #!/bin/bash
             FILENAME="/home/ubuntu/Home/.ssh/id_rsa.pub"            
             AUTHORIZED_KEYS_FILENAME="/home/ubuntu/.ssh/authorized_keys"
-            READYMESSAGE="Ready to work with vscode use the Remote-SSH extension "$(hostname -I)"username ubuntu"
+            READYMESSAGE="Ready to work with vscode use the Remote-SSH extension "$(hostname -I)"username ubuntu\n"
+            printf "\n"
             if [ -d "/home/ubuntu/Home/.ssh" ] 
             then
               if [ -f "$FILENAME" ]
@@ -44,20 +45,23 @@ instances:
                 if grep -qF "$PUBKEY" $AUTHORIZED_KEYS_FILENAME
                 then			
                   printf "$READYMESSAGE"
+                  printf "\n"
                 else
-                  printf "Adding default Pub key (id_rsa.pub) to authorized keys"
+                  printf "Adding default Pub key (id_rsa.pub) to authorized keys\n"
                   cat $FILENAME >> $AUTHORIZED_KEYS_FILENAME
                   printf "$READYMESSAGE"
+                  printf "\n"
                 fi
               else
-                printf "No pub key (id_rsa.pub)found in /home/ubuntu/Home/.ssh"
+                printf "No pub key (id_rsa.pub)found in /home/ubuntu/Home/.ssh\n"
               fi
             else
-              printf "If container is set as Primary or Home is mounted using:"
-              printf "multipass mount $HOME dotnet-dev:Home"
-              printf "The default Pub key (id_rsa.pub) will be added to authorized_keys"
-              printf "so vscode can be used to access this container with the Remote-SSH extension"
-              printf "without having to login"
+              printf "If container is set as Primary or Home is mounted using:\n"
+              printf "multipass mount $HOME dotnet-dev:Home\n"
+              printf "The default Pub key (id_rsa.pub) will be added to authorized_keys\n"
+              printf "so vscode can be used to access this container with the Remote-SSH extension\n"
+              printf "without having to login\n"
+              printf "\n"
             fi
           path: /etc/update-motd.d/05-motd-visualstudio
           defer: true
