@@ -26,7 +26,7 @@ instances:
         - zsh
         - vim
         - dotnet-sdk-6.0     
-          
+
 
         write_files:
 
@@ -60,7 +60,7 @@ instances:
               echo "without having to login"
             fi
           path: /etc/update-motd.d/60-motd-visualstudio
-          defer: false
+          defer: true
 
 
         runcmd:
