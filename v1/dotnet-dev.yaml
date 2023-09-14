@@ -25,7 +25,43 @@ instances:
         packages:
         - zsh
         - vim
-        - dotnet-sdk-6.0       
+        - dotnet-sdk-6.0     
+          
+
+        write_files:
+
+        - content: |
+
+            #!/bin/bash
+            FILENAME="/home/ubuntu/Home/.ssh/id_rsa.pub"
+            PUBKEY=$(<$FILENAME)
+            AUTHORIZED_KEYS_FILENAME="/home/ubuntu/.ssh/authorized_keys"
+            READYMESSAGE="Ready to work with vscode use the Remote-SSH extension "$(hostname -I)"username ubuntu"
+            if [ -d "/home/ubuntu/Home/.ssh" ] 
+            then
+              if [ -f "$FILENAME" ]
+              then
+                if grep -qF "$PUBKEY" $AUTHORIZED_KEYS_FILENAME
+                then			
+                  echo $READYMESSAGE
+                else
+                  echo "Adding default Pub key (id_rsa.pub) to authorized keys"
+                  cat $FILENAME >> $AUTHORIZED_KEYS_FILENAME
+                  echo $READYMESSAGE
+                fi
+              else
+                echo "No pub key (id_rsa.pub)found in /home/ubuntu/Home/.ssh"
+              fi
+            else
+              echo "If container is set as Primary or Home is mounted using:"
+              echo "multipass mount $HOME dotnet-dev:Home"
+              echo "The default Pub key (id_rsa.pub) will be added to authorized_keys"
+              echo "so vscode can be used to access this container with the Remote-SSH extension"
+              echo "without having to login"
+            fi
+          path: /etc/update-motd.d/60-motd-visualstudio
+          defer: false
+
 
         runcmd:
         - DEBIAN_FRONTEND=noninteractive apt -y upgrade
