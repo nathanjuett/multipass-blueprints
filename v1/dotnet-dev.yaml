@@ -43,21 +43,21 @@ instances:
                 PUBKEY=$(<$FILENAME)
                 if grep -qF "$PUBKEY" $AUTHORIZED_KEYS_FILENAME
                 then			
-                  echo $READYMESSAGE
+                  printf "$READYMESSAGE"
                 else
-                  echo "Adding default Pub key (id_rsa.pub) to authorized keys"
+                  printf "Adding default Pub key (id_rsa.pub) to authorized keys"
                   cat $FILENAME >> $AUTHORIZED_KEYS_FILENAME
-                  echo $READYMESSAGE
+                  printf "$READYMESSAGE"
                 fi
               else
-                echo "No pub key (id_rsa.pub)found in /home/ubuntu/Home/.ssh"
+                printf "No pub key (id_rsa.pub)found in /home/ubuntu/Home/.ssh"
               fi
             else
-              echo "If container is set as Primary or Home is mounted using:"
-              echo "multipass mount $HOME dotnet-dev:Home"
-              echo "The default Pub key (id_rsa.pub) will be added to authorized_keys"
-              echo "so vscode can be used to access this container with the Remote-SSH extension"
-              echo "without having to login"
+              printf "If container is set as Primary or Home is mounted using:"
+              printf "multipass mount $HOME dotnet-dev:Home"
+              printf "The default Pub key (id_rsa.pub) will be added to authorized_keys"
+              printf "so vscode can be used to access this container with the Remote-SSH extension"
+              printf "without having to login"
             fi
           path: /etc/update-motd.d/05-motd-visualstudio
           defer: true
