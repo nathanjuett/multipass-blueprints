@@ -32,7 +32,7 @@ instances:
 
         - content: |
 
-            #!/bin/bash
+            #!/bin/sh
             FILENAME="/home/ubuntu/Home/.ssh/id_rsa.pub"            
             AUTHORIZED_KEYS_FILENAME="/home/ubuntu/.ssh/authorized_keys"
             READYMESSAGE="Ready to work with vscode use the Remote-SSH extension "$(hostname -I)"username ubuntu\n"
